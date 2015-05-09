@@ -1,7 +1,7 @@
 # Create multiple VMs
 
 
-Create Availability Set  - <a href="https://portal.azure.com/#create/Microsoft.Template/uri/" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
@@ -10,7 +10,7 @@ It uses the copyIndex() function to map the number of VMs you want to deploy to 
 
 ## Additional characteristics
 - one storage account, standard LRS (local, no geo replication)
--one virtual network predefined
+- one virtual network predefined
 	- Only Windows Servers, limited to:
 		-2012 R2 Datacenter
 		-2008-R2-SP1
