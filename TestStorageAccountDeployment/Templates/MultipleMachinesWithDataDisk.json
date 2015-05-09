@@ -1,0 +1,201 @@
+﻿{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "newStorageAccountName": {
+            "type": "string",
+            "metadata": {
+                "description": "Unique DNS Name for the Storage Account where the Virtual Machine's disks will be placed."
+            }
+        },
+        "MyVNETLocation": {
+            "type": "string",
+            "defaultValue": "West Europe",
+            "allowedValues": [
+                "East US",
+                "West US",
+                "West Europe",
+                "East Asia",
+                "South East Asia"
+            ]
+        },
+        "TESTName": {
+            "type": "string"
+        },
+        "TESTAdminUserName": {
+            "type": "string"
+        },
+        "TESTAdminPassword": {
+            "type": "securestring"
+        },
+        "TESTWindowsOSVersion": {
+            "type": "string",
+            "defaultValue": "2012-R2-Datacenter",
+            "allowedValues": [
+                "2008-R2-SP1",
+                "2012-Datacenter",
+                "2012-R2-Datacenter",
+                "Windows-Server-Technical-Preview"
+            ]
+        },
+        "NumberOfVMs": {
+            "type": "int",
+            "defaultValue": 3
+        }
+
+    },
+    "variables": {
+        "location": "West Europe",
+        "storageAccountType": "Standard_LRS",
+        "MyVNETPrefix": "10.0.0.0/16",
+        "MyVNETSubnet1Name": "Subnet-1",
+        "MyVNETSubnet1Prefix": "10.0.0.0/24",
+        "MyVNETSubnet2Name": "Subnet-2",
+        "MyVNETSubnet2Prefix": "10.0.1.0/24",
+        "TESTImagePublisher": "MicrosoftWindowsServer",
+        "TESTImageOffer": "WindowsServer",
+        "TESTOSDiskName": "TESTOSDisk",
+        "TESTVmSize": "Standard_D1",
+        "TESTVnetID": "[resourceId('Microsoft.Network/virtualNetworks', 'MyVNET')]",
+        "TESTSubnetRef": "[concat(variables('TESTVnetID'), '/subnets/', variables('MyVNETSubnet1Name'))]",
+        "TESTStorageAccountContainerName": "vhds",
+        "TESTNicName": "[concat(parameters('TESTName'), 'NetworkInterface')]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "name": "[parameters('newStorageAccountName')]",
+            "apiVersion": "2015-05-01-preview",
+            "location": "[variables('location')]",
+            "tags": {
+                "displayName": "StorageAccount"
+            },
+            "properties": {
+                "accountType": "[variables('storageAccountType')]"
+            }
+        },
+        {
+            "name": "MyVNET",
+            "type": "Microsoft.Network/virtualNetworks",
+            "location": "[parameters('MyVNETLocation')]",
+            "apiVersion": "2015-05-01-preview",
+            "dependsOn": [ ],
+            "tags": {
+                "displayName": "MyVNET"
+            },
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[variables('MyVNETPrefix')]"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "name": "[variables('MyVNETSubnet1Name')]",
+                        "properties": {
+                            "addressPrefix": "[variables('MyVNETSubnet1Prefix')]"
+                        }
+                    },
+                    {
+                        "name": "[variables('MyVNETSubnet2Name')]",
+                        "properties": {
+                            "addressPrefix": "[variables('MyVNETSubnet2Prefix')]"
+                        }
+                    }
+                ]
+            }
+        },
+
+        {
+            "name": "[concat(variables('TESTNicName'),copyindex(),'-nic')]",
+            "type": "Microsoft.Network/networkInterfaces",
+            "location": "[parameters('MyVNETLocation')]",
+            "apiVersion": "2015-05-01-preview",
+            "copy": {
+                "name": "nicLoop",
+                "count": "[parameters('NumberOfVMs')]"
+            },
+            "dependsOn": [
+                "[concat('Microsoft.Network/virtualNetworks/', 'MyVNET')]"
+            ],
+            "tags": {
+                "displayName": "TESTNic"
+            },
+            "properties": {
+                "ipConfigurations": [
+                    {
+                        "name": "ipconfig1",
+                        "properties": {
+                            "privateIPAllocationMethod": "Dynamic",
+                            "subnet": {
+                                "id": "[variables('TESTSubnetRef')]"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            "name": "[concat(parameters('TESTName'), copyindex())]",
+            "type": "Microsoft.Compute/virtualMachines",
+            "location": "[parameters('MyVNETLocation')]",
+            "apiVersion": "2015-05-01-preview",
+            "copy": { 
+               "name": "virtualMachineLoop", 
+               "count": "[parameters('NumberOfVMs')]" 
+            }, 
+
+            "dependsOn": [
+                "[concat('Microsoft.Storage/storageAccounts/', parameters('newStorageAccountName'))]",
+                "[concat('Microsoft.Network/networkInterfaces/',variables('TESTNicName'),copyindex(),'-nic')]"
+            ],
+            "tags": {
+                "displayName": "TEST"
+            },
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[variables('TESTVmSize')]"
+                },
+                "osProfile": {
+                    "computername": "[concat(parameters('TESTName'),copyindex())]",
+                    "adminUsername": "[parameters('TESTAdminUsername')]",
+                    "adminPassword": "[parameters('TESTAdminPassword')]"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "[variables('TESTImagePublisher')]",
+                        "offer": "[variables('TESTImageOffer')]",
+                        "sku": "[parameters('TESTWindowsOSVersion')]",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "name": "TESTOSDisk",
+                        "vhd": {
+                            "uri": "[concat('http://', parameters('newStorageAccountName'), '.blob.core.windows.net/', variables('TESTStorageAccountContainerName'), '/', variables('TESTOSDiskName'),copyindex(), '.vhd')]"
+                        },
+                        "caching": "ReadWrite",
+                        "createOption": "FromImage"
+                    },
+                    "dataDisks": [{
+                          "lun": 1,
+                          "diskSizeGB": 10,
+                        "name": "datadisk",
+                        "createOption": "empty",
+                          "vhd": {
+                            "uri": "[concat('http://', parameters('newStorageAccountName'), '.blob.core.windows.net/', variables('TESTStorageAccountContainerName'), '/', 'datadisk',copyindex(), '.vhd')]"
+                          },
+                        "caching": "None"
+                        }
+                    ]
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', concat(variables('TESTNicName'),copyindex(),'-nic'))]"
+                        }
+                    ]
+                }
+            }
+        }
+    ]
+}
