@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.22823.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "MultipleVMsWithDatadisk", "TestStorageAccountDeployment\MultipleVMsWithDatadisk.deployproj", "{0C2EF3F7-7329-41AE-9359-BB76FD730BE1}"
+Project("{151D2E53-A2C4-4D7D-83FE-D05416EBD58E}") = "MultipleVMsWithDatadisk", "MultipleVMsWithDatadisk\MultipleVMsWithDatadisk.deployproj", "{0C2EF3F7-7329-41AE-9359-BB76FD730BE1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
