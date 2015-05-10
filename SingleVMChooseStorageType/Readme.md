@@ -1,5 +1,5 @@
 ﻿# Create a VM and select the storage account type 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/" target="_blank"> 
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2FStijnc%2FResource-Manager%2Fmaster%2FSingleVMChooseStorageType%2FTemplates%2FSingleVMChooseStoragetype.json" target="_blank"> 
     <img src="http://azuredeploy.net/deploybutton.png"/> 
 </a> 
 Using this template you can deploy 1 VM, but specify the storage account type. The VM is a fixed size DS1 

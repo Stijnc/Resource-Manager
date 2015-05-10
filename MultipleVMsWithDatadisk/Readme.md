@@ -1,7 +1,7 @@
 # Create multiple VMs
 
 
-<a href="https://portal.azure.com/#create/Microsoft.Template/uri/" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3a%2f%2fraw.githubusercontent.com%2fStijnc%2fResource-Manager%2fmaster%2fMultipleVMsWithDatadisk%2fTemplates%2fMultipleMachinesWithDataDisk.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 
