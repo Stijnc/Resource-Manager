@@ -1,0 +1,7 @@
+﻿{
+  "itemDisplayName": "Create Create a Windows VM of size DS1 and choose the storage account",
+  "description": "This template creates a Windows VM on the storagetype choosen",
+  "summary": "Create a Windows VM of size DS1 and choose the storage account",
+  "githubUsername": "Stijnc",
+  "dateUpdated": "11/5/2015"
+}

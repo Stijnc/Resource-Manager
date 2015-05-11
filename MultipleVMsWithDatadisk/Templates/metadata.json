@@ -1,0 +1,7 @@
+﻿{
+  "itemDisplayName": "Create multiple Windows VMs with one datadisk",
+  "description": "This template create Windows VMs with one datadisk. The amount of VMs is specified in a parameter (int). It uses the copyindex() function to deploy several VMs",
+  "summary": "Multiple Windows VMs with one datadisk",
+  "githubUsername": "Stijnc",
+  "dateUpdated": "11/5/2015"
+}

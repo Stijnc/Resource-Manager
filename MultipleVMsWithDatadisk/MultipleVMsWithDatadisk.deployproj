@@ -35,6 +35,7 @@
     <Content Include="Scripts\Deploy-AzureResourceGroup.ps1" />
     <Content Include="Templates\MultipleMachinesWithDataDisk.json" />
     <None Include="Readme.md" />
+    <None Include="Templates\metadata.json" />
     <None Include="Templates\MultipleMachinesWithDataDisk.param.pro.json" />
     <None Include="Templates\MultipleMachinesWithDataDisk.param.acc.json" />
     <None Include="Templates\MultipleMachinesWithDataDisk.param.dev.json" />

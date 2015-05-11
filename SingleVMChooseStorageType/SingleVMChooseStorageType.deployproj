@@ -35,6 +35,7 @@
     <Content Include="Scripts\Deploy-AzureResourceGroup.ps1" />
     <Content Include="Templates\SingleVMChooseStoragetype.json" />
     <None Include="Readme.md" />
+    <None Include="Templates\metadata.json" />
     <None Include="Templates\SingleVMChooseStoragetype.param.dev.json" />
   </ItemGroup>
   <ItemGroup>
