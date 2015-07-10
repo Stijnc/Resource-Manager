@@ -1,0 +1,76 @@
+﻿{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "newAutomationAccount": {
+      "type": "string",
+      "defaultValue": "arm-automation"
+    },
+    "newRunbookName": {
+      "type": "string",
+      "defaultValue": "armtest"
+    },
+    "newRunbookDescription": {
+      "type": "string"
+    },
+    "script": {
+      "type": "string"
+    },
+    "newRunbookType": {
+      "type": "string",
+      "defaultValue": "Script",
+      "allowedValues": [
+        "Script",
+        "Graphical"
+      ]
+    }
+  },
+  "variables": {
+    "location": "West Europe",
+    "verbose": "true",
+    "progress": "false"
+  },
+  "resources": [
+    {
+      "name": "[parameters('newAutomationAccount')]",
+      "apiVersion": "2015-01-01-preview",
+      "type": "Microsoft.Automation/automationAccounts",
+      "location": "[variables('location')]",
+      "tags": {
+        "DisplayName": "automation",
+        "env": "Development"
+      },
+      "properties": {
+        "sku": {
+          "name": "Free",
+          "family": null,
+          "capacity": null
+        }
+      },
+      "resources": [
+        {
+        "name": "[parameters('newRunbookName')]",
+        "apiVersion": "2015-01-01-preview",
+        "type": "runbooks",
+          "location": "[resourceGroup().location]",
+          "dependsOn": [
+                "[concat('Microsoft.Automation/automationAccounts', parameters('newAutomationAccount'))]"
+              ],
+          "properties": {
+            "description": "[parameters('newRunbookDescription')]",
+            "runbookType": "[parameters('newRunbookType')]",
+            "logVerbose": "true",
+            "logDebug": "false",
+            "publishContentLink": {
+                            "uri": "[parameters('script')]",
+                            "version": "1.0.0.0"
+                        }
+
+          }
+      }
+      ]
+    }
+  ],
+      "outputs": {
+      }
+    }

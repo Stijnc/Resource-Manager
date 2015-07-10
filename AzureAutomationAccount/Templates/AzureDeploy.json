@@ -1,0 +1,47 @@
+﻿{
+  "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "newAutomationAccountName": {
+      "type": "string",
+      "metadata": {
+        "description": "The Azure automation Account name" 
+      }
+    },
+    "newLocation": {
+      "type": "string",
+      "defaultValue": "West Europe",
+      "allowedValues": [
+        "West Europe",
+        "West US"
+      ]
+    },
+    "metadata": {
+        "description": "The Azure automation Location" 
+      }
+  },
+  "variables": {
+  },
+  "resources": [
+    {
+      "name": "[parameters('AutomationAccountName')]",
+      "apiVersion": "2015-01-01-preview",
+      "type": "Microsoft.Automation/automationAccounts",
+      "location": "[parameters('Location')]",
+      "tags": {
+        "DisplayName": "automation",
+        "env": "Development"
+        
+      },
+      "properties": {
+        "sku": {
+        "name": "Free",
+        "family": null,
+        "capacity": null
+    }
+      }
+    }
+  ],
+    "outputs": {
+    }
+}
